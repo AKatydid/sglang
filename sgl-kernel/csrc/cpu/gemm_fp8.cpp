@@ -385,7 +385,10 @@ struct tinygemm_kernel_nn2<at::BFloat16, has_bias, BLOCK_M, BLOCK_N> {
       at::BFloat16* __restrict__ C,
       const float* __restrict__ bias,
       float scale,
-      int K, int lda, int ldb, int ldc) {
+      int K, 
+      int lda, 
+      int ldb, 
+      int ldc) {
     constexpr int ROWS = BLOCK_M;
     constexpr int COLS = BLOCK_N / 16;
 
@@ -403,7 +406,7 @@ struct tinygemm_kernel_nn2<at::BFloat16, has_bias, BLOCK_M, BLOCK_N> {
 
     const int K2 = K >> 1;
     const int lda2 = lda >> 1;
-    const int ldb2 = ldb;
+    const int ldb2 = ldb;  // ldb * 2 >> 1;
     const float* a_ptr = reinterpret_cast<const float*>(A);
     const uint16_t* b_ptr = reinterpret_cast<const uint16_t*>(B);
 
@@ -649,7 +652,12 @@ struct brgemm2<at::BFloat16, has_bias> {
       float* __restrict__ Ctmp,
       const float* __restrict__ bias,
       float scale,
-      int M, int N, int K, int lda, int ldb, int ldc) {
+      int M, 
+      int N, 
+      int K, 
+      int lda, 
+      int ldb, 
+      int ldc) {
     constexpr int BLOCK_N = block_size_n();
     const int ldb_tmp = block_size_n();
 
